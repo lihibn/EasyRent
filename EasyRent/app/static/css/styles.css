@@ -1,0 +1,544 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+}
+
+:root {
+    --blue: #1e90ff;
+    --white: #ffffff;
+    --black: #000000;
+    --gray: #838E95;
+    --font-color: #869ab8;
+    --btn-color: #313232;
+    --border-btn: 0.0.1rem;
+    --btn-margin: 0.5rem;
+    --btn-padding: 0.5rem;
+    --h2: 1.5rem;
+    --button-click-blue: rgb(53, 147, 241);
+    --insta-color: #E1306C;
+    --twitter-color: #00ACEE;
+    --facebook-color: #3b5998;
+
+}
+
+.tab-button {
+    border-bottom: 2px solid transparent;
+}
+
+.active-tab {
+    border-color: black;
+    font-weight: bold;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel:not(.hidden) {
+    display: block;
+}
+
+/* utility */
+.sub-head {
+    color: var(--black);
+    font-size: 1.18rem;
+    margin: 0.7rem 0.5rem;
+    text-align: left;
+}
+
+.sub-para {
+    color: var(--font-color);
+    padding: 0.5rem 0.515rem;
+    font-size: 1.1rem;
+    font-family: sans-serif;
+    color: #0F4880;
+}
+
+.btn {
+    text-decoration: none;
+    border-radius: 0.3rem;
+    color: var(--btn-color);
+    padding: 0.5rem 1.19rem;
+    outline: none;
+    background-color: #000000;
+}
+
+h1 {
+    color: var(--black);
+    font-size: 2.3rem;
+    margin: 0.7rem 1.5rem;
+}
+
+/* navigation bar */
+#navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    flex-wrap: wrap;
+    z-index: 100;
+    background: transparent;
+    margin: 0 20px;
+}
+
+
+.left .logo-name {
+    text-decoration: none;
+    color: white;
+    font-size: 1.2rem;
+    font-family: Arial, sans-serif;
+    margin-left: 0.5rem;
+    display: none;
+}
+
+.left .logo-name span {
+    color: dodgerblue;
+}
+
+ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    list-style: none;
+    padding: 0.5rem;
+    text-decoration: none;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-align: center;
+    margin-left: 1rem;
+    border-radius: 3px;
+}
+
+ul li .nav-link {
+    display: block;
+    padding: 0.4rem 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    text-decoration: none;
+    background: none;
+    border: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+ul li .nav-link:hover {
+    background-color: black;
+    color: white;
+    border-radius: 3px;
+}
+
+ul li a.active {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    border-radius: 3px;
+}
+
+.active {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    border-radius: 3px;
+}
+
+.profile-modal {
+    position: absolute;
+    top: 92px;
+    right: 35px;
+    background-color: #ffff;
+    box-shadow: 4px 4px #C6C6C6;
+    width: 336px;
+    height: auto;
+    max-width: 450px;
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 25px;
+    border-bottom: 14px solid #22D3EE;
+    display: none;
+    z-index: 1;
+}
+
+.profile-modal .profile-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.profile-account {
+    margin: 18px;
+    display: flex;
+    margin-left: 0px;
+    align-items: center;
+}
+
+.profile-account h3,
+span {
+    font-size: 14px;
+}
+
+hr {
+    margin: 10px 6px;
+}
+
+nav .profile-details {
+    margin-right: 10px;
+}
+
+.profile-account img {
+    height: 68px;
+    width: 69px;
+    border-radius: 6px;
+    object-fit: cover;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #0F4880;
+
+}
+
+.profile-details img:hover {
+    border: 2px solid #0F4880;
+}
+
+.profile-info {
+    padding: 8px;
+}
+
+.profile-account-info {
+    padding: 6px 13px;
+    flex: 1;
+}
+
+.profile-initial {
+    width: 70px;
+    height: 70px;
+    background-color: #007bff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-initial span {
+    font-size: 24px;
+    /* Adjust font size as needed */
+    color: white;
+}
+
+.profile-info a {
+    text-decoration: none;
+    color: black;
+    font-size: 19px;
+}
+
+.profile-info a:hover {
+    text-decoration: none;
+    color: #0F4880;
+}
+
+.profile-action p {
+    font-size: 21px;
+    font-weight: 500;
+}
+
+.profile-action .close-side-nav,
+.logo .menu-icon {
+    font-size: 21px;
+    font-weight: 500;
+    background-color: #22D3EE;
+    padding: 5px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+}
+
+.close-side-nav:hover {
+    background-color: #20C8E2;
+}
+
+.logo .menu-icon {
+    background-color: black;
+    color: white;
+}
+
+.profile-edit:hover {
+    color: #22D3EE;
+}
+
+/* The Modal */
+.edit-profile-modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.edit-profile-modal-content {
+    margin: 10% auto;
+    padding: 20px;
+    width: 80%;
+    position: relative;
+}
+
+/* Close Button */
+.close-modal {
+    font-size: 28px;
+    top: 42px;
+    right: 32%;
+    background-color: #22D3EE;
+    padding: 5px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    position: absolute;
+    ;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    background-color: #20C8E2;
+}
+
+.edit-profile-modal-content button {
+    background-color: #22D3EE;
+}
+
+.edit-profile-modal-content button:hover {
+    background-color: #20C8E2;
+}
+
+/* brief intro about */
+.container {
+    height: 80vh;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.features {
+    margin-top: 30px;
+}
+
+.feature {
+    margin-bottom: 20px;
+    border-top: 3.5px solid #20C8E2;
+}
+
+.feature h2 {
+    color: #20C8E2;
+}
+
+
+.icon-ball-behind {
+    opacity: 0.2;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 20%;
+    right: 70%;
+    transform: translate(-50%, -50%);
+    transform: translate(132px, -54px);
+    color: rgb(214, 238, 254);
+}
+
+.icon-timer-behind {
+    opacity: 0.2;
+    position: absolute;
+    z-index: 1;
+    /* Ensure the icon stays behind the text */
+    top: 6%;
+    left: 20%;
+    right: 9%;
+    transform: translate(-50%, -50%);
+    transform: translate(132px, -54px);
+    color: rgb(214, 238, 254);
+}
+
+.icon-game-behind {
+    opacity: 0.2;
+    position: absolute;
+    z-index: 1;
+    top: 34%;
+    left: 73%;
+    right: 0px;
+    transform: translate(-50%, -50%);
+    transform: translate(132px, -54px);
+    color: rgb(214, 238, 254);
+
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../assets/images/hero-background.jpg') no-repeat center / cover;
+    z-index: 1;
+}
+
+.hero-section button {
+    background-color: black;
+}
+
+@media only screen and (max-width: 945px) {
+    .left ul {
+        display: none;
+    }
+
+    .left .logo {
+        display: block;
+        margin-left: 0px;
+        padding-left: 0px;
+    }
+
+    .right .btn:nth-child(1) {
+        display: none;
+    }
+
+    .right .btn:nth-child(2) {
+        display: none;
+    }
+
+    .mid {
+        display: none;
+    }
+
+    .right .menu-icon {
+        display: block;
+        color: black;
+    }
+
+    .hero-section {
+        height: 70vh !important;
+        padding: 54px;
+        /* Adjust padding for better alignment */
+    }
+}
+
+#signup-modal .submit-btn,
+#signin-modal .submit-btn {
+    background-color: black;
+}
+
+.signup-modal-overlay,
+.signin-modal-overlay {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.signup-modal-overlay.show,
+.signin-modal-overlay.show {
+    display: block;
+}
+
+.signup-modal-overlay.hidden,
+.signin-modal-overlay.hidden {
+    display: none;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.property-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.popup-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-buttons button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.schedule-meeting {
+    background-color: #4caf50;
+    color: white;
+}
+
+.schedule-meeting:hover {
+    background-color: #45a049;
+}
+
+.close-popup {
+    background-color: #f44336;
+    color: white;
+}
+
+.close-popup:hover {
+    background-color: #e53935;
+}
