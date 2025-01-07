@@ -1,0 +1,222 @@
+{% extends "base.html" %} {% block title %}Property{% endblock %} {% block css
+%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/property.css') }}" />
+{% endblock %}
+
+
+{% block content %}
+
+{% if user_type == "Landlord" or user_type == "landlord" %}
+
+<div id="property-form" class="max-w-screen-lg mx-auto my-6 p-6 bg-white fade-in px-4 md:px-12 lg:px-20">
+    <button type="button" onclick="updateUrl('property')" id="back-to-listing-btn"
+        class="bg-gray-300 text-black px-4 py-2 rounded mb-4">
+        Back to Listing
+    </button>
+
+    <div class="w-full flex flex-col sm:flex-row justify-between gap-2 my-6">
+        <div class="w-full bg-gray-200 rounded-md h-2">
+            <div id="progress-bar-step-1" class="bg-black h-2 rounded-l-full" style="width: 0%"></div>
+        </div>
+        <div class="w-full bg-gray-200 rounded-md h-2">
+            <div id="progress-bar-step-2" class="bg-black h-2" style="width: 0%"></div>
+        </div>
+        <div class="w-full bg-gray-200 rounded-md h-2">
+            <div id="progress-bar-step-3" class="bg-black h-2" style="width: 0%"></div>
+        </div>
+        <div class="w-full bg-gray-200 rounded-md h-2">
+            <div id="progress-bar-step-4" class="bg-black h-2 rounded-r-full" style="width: 0%"></div>
+        </div>
+    </div>
+    <form enctype="multipart/form-data" id="propertyForm">
+        <div id="step-1" class="step mt-4">
+            <h2 class="text-xl font-semibold text-black">General Details</h2>
+            <p class="text-sm text-gray-600 mt-2">
+                Provide basic details about the property, location, type and more.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label for="property-name" class="block text-sm font-medium pb-1">Property Name*</label>
+                    <input type="text" id="property-name" name="propertyName" class="w-full p-2 border rounded"
+                        placeholder="Enter street name" required />
+                </div>
+                <div>
+                    <label for="city" class="block text-sm font-medium pb-1">City*</label>
+                    <select id="city" class="w-full p-2 border rounded" name="city" required>
+                        <option value="">Select City</option>
+                        <option value="ramat-hasharon">Ramat Hasharon</option>
+                        <option value="holon">Holon</option>
+                        <option value="hadera">Hadera</option>
+                        <option value="tiberias">Tiberias</option>
+                        <option value="rishon-lezion">Rishon Lezion</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="street" class="block text-sm font-medium pb-1">Street*</label>
+                    <input type="text" id="street" name="street" class="w-full p-2 border rounded"
+                        placeholder="Enter street name" required />
+                </div>
+                <div>
+                    <label for="house-number" class="block text-sm font-medium pb-1">House Number*</label>
+                    <input type="text" id="house-number" name="houseNumber" class="w-full p-2 border rounded"
+                        placeholder="Enter house number" required />
+                </div>
+                <div>
+                    <label for="entrance" class="block text-sm font-medium pb-1">Entrance*</label>
+                    <input type="text" id="entrance" name="entrance" class="w-full p-2 border rounded"
+                        placeholder="Enter entrance details" required />
+                </div>
+                <div>
+                    <label for="floor" name="floor" class="block text-sm font-medium pb-1">Floor*</label>
+                    <input type="text" id="floor" class="w-full p-2 border rounded" placeholder="Enter floor number"
+                        required />
+                </div>
+                <div>
+                    <label for="property-type" class="block text-sm font-medium pb-1">Type of Property*</label>
+                    <select id="property-type" name="propertyType" class="w-full p-2 border rounded" required>
+                        <option value="">Select Property Type</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="house">House</option>
+                        <option value="villa">Villa</option>
+                        <option value="studio">Studio</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="airflow" class="block text-sm font-medium pb-1">Direction of Airflow*</label>
+                    <select id="airflow" name="airflow" class="w-full p-2 border rounded" required>
+                        <option value="">Select Direction</option>
+                        <option value="north">North</option>
+                        <option value="south">South</option>
+                        <option value="east">East</option>
+                        <option value="west">West</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="rooms" class="block text-sm font-medium pb-1">Number of Rooms*</label>
+                    <input type="number" name="rooms" id="rooms" class="w-full p-2 border rounded"
+                        placeholder="Enter number of rooms" required />
+                </div>
+                <div>
+                    <label for="square-meters" name="squareMeters" class="block text-sm font-medium pb-1">Square
+                        Meters*</label>
+                    <input type="number" id="square-meters" class="w-full p-2 border rounded"
+                        placeholder="Enter square meters" required />
+                </div>
+                <div>
+                    <label for="comments" class="block text-sm font-medium pb-1">Comments</label>
+                    <textarea id="comments" name="comments" class="w-full p-2 border rounded"
+                        placeholder="Enter comments"></textarea>
+                </div>
+                <div>
+                    <label for="property-photos" class="block text-sm font-medium pb-1">Upload Photos*</label>
+                    <input type="file" id="property-photos" class="w-full p-2 border rounded" accept="image/*" multiple required/>
+                </div>
+            </div>
+            <button class="mt-6 bg-black text-white px-6 py-2 rounded" onclick="validateStep(1)">
+                Continue
+            </button>
+        </div>
+
+        <div id="step-2" class="step hidden">
+            <h2 class="text-xl font-semibold text-black">Payments</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label for="monthly-rent" class="block text-sm font-medium pb-1">Monthly Rent*</label>
+                    <input type="number" id="monthly-rent" name="monthlyRent" class="w-full p-2 border rounded"
+                        placeholder="Enter monthly rent" required />
+                </div>
+                <div>
+                    <label for="building-maintenance" class="block text-sm font-medium pb-1">Building Maintenance
+                        Fee*</label>
+                    <input type="number" id="building-maintenance" name="buildingMaintenance"
+                        class="w-full p-2 border rounded" placeholder="Enter maintenance fee" required />
+                </div>
+                <div>
+                    <label for="entry-date" class="block text-sm font-medium pb-1">Entry Date*</label>
+                    <input type="date" id="entry-date" name="entryDate" class="w-full p-2 border rounded" required />
+                </div>
+            </div>
+            <div class="mt-6 flex justify-between">
+                <button type="button" class="mt-6 bg-black text-white px-6 py-2 rounded" onclick="goBack(1)">
+                    Back
+                </button>
+                <button type="button" class="mt-6 bg-black text-white px-6 py-2 rounded" onclick="validateStep(2)">
+                    Continue
+                </button>
+            </div>
+        </div>
+
+        <div id="step-3" class="step hidden">
+            <h2 class="text-xl font-semibold text-black">Meeting</h2>
+            <p class="text-sm text-gray-600 mt-2">
+                Schedule your meeting details below.
+            </p>
+
+            <div class="mt-4">
+                <label for="calendar" class="block text-sm font-medium pb-1">Select Date*</label>
+                <input type="date" id="calendar" name="calendar" class="w-full p-2 border rounded" />
+
+            </div>
+
+            <div id="time-slots" class="mt-4">
+                <label for="time-slot" class="block text-sm font-medium pb-1">Available Time*</label>
+                <input type="time" id="time-slot" name="timeSlot" class="w-full p-2 border rounded" />
+                <button type="button" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded" onclick="addTimeSlot()">
+                    Add Meeting
+                </button>
+            </div>
+
+            <div id="additional-times" class="mt-4">
+                <h3 class="text-sm font-medium">Scheduled Meetings:</h3>
+                <ul id="meeting-list" class="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></ul>
+                <button type="button" id="view-more" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hidden"
+                    onclick="viewMore()">
+                    View More
+                </button>
+                <button type="button" id="view-less" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hidden"
+                    onclick="viewLess()">
+                    View Less
+                </button>
+            </div>
+
+            <div class="mt-6 flex justify-between">
+                <button type="button" class="mt-6 bg-black text-white px-6 py-2 rounded" onclick="goBack(2)">
+                    Back
+                </button>
+                <button type="button" class="mt-6 bg-black text-white px-6 py-2 rounded" onclick="validateStep(3)">
+                    Continue
+                </button>
+            </div>
+        </div>
+
+        <div id="step-4" class="step hidden">
+            <h2 class="text-xl font-semibold text-black">Contract Upload</h2>
+            <p class="text-sm text-gray-600 mt-2">
+                Please upload contract before delivery to the tenant
+            </p>
+            <div class="mt-4">
+                <label for="contract-upload" class="block text-sm font-medium pb-1">Upload Contract PDF</label>
+                <input type="file" id="contract-upload" name="contract" class="w-full p-2 border rounded" accept=".pdf"
+                    required />
+            </div>
+
+            <div class="mt-6 flex justify-between">
+                <button type="button" class="mt-6 bg-black text-white px-6 py-2 rounded" onclick="goBack(3)">
+                    Back
+                </button>
+                <button type="submit" class="mt-6 bg-black text-white px-6 py-2 rounded">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endif %}
+
+{% block js %}
+<script src="{{url_for('static',filename='js/property.js')}}"></script>
+<script src="{{url_for('static',filename='js/add_property.js')}}"></script>
+{% endblock %}
+
+{% endblock %}
