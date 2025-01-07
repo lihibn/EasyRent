@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, session, make_response, redirect, url_for
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from ..models.models import User, Property, FaultReport
-from ..database.db import SessionLocal
+from models.models import User, Property, FaultReport
+from database.db import SessionLocal
 from werkzeug.utils import secure_filename
 import os
 import datetime
