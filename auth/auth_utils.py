@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, session, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from ..database.db import SessionLocal
-from ..models.models import User,Property,Meeting
+from database.db import SessionLocal
+from models.models import User,Property,Meeting
 import jwt
 from dotenv import load_dotenv
 import os
