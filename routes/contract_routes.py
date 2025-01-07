@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, jsonify, session, make_response, redirect
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from models.models import User, Property, Meeting, Contract
-from docusign_api import send_signature_request
+from routes.docusign_api import send_signature_request
 from database.db import SessionLocal
 import datetime
 from database.db import SessionLocal
@@ -9,7 +9,7 @@ import datetime
 import jwt
 import requests
 import os
-from routes.docusign_esign.client.api_exception import ApiException
+from docusign_esign.client.api_exception import ApiException
 import time
 import base64
 
