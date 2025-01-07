@@ -412,4 +412,13 @@ function showErrorMessage(message) {
   setTimeout(() => errorMessageElement.classList.add("hidden"), 5000);
 }
 
+function validatePositiveNumber(input) {
+  if (input.value === "") {
+    return;
+  }
 
+  if (input.value < 1) {
+    input.value = "";
+    showErrorMessage("Please enter a number greater than 0.");
+  }
+}
