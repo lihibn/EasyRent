@@ -158,22 +158,24 @@ def get_token():
     password = data.get('password')
     grant_type = data.get('grant_type')
     session = SessionLocal()
-    if not user_id or not password or not grant_type:
+    if not user_id or not password or not grant_type: # Check if required fields are missing.
         return jsonify({"error": "Missing required fields"}), 400
 
     user = session.query(User).filter(User.email == user_id).first()
-
+    
+    # Check if the user exists and if the password matches.
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
         if user.role == "developer" or user.role == "Developer":
-            user.last_login = datetime.datetime.utcnow()
+            user.last_login = datetime.datetime.utcnow() # Update the user's last login time and commit changes.
             session.add(user)
             session.commit()
 
+            # Generate an access token (JWT).
             token = jwt.encode({
                 "user_id": user.id,
                 "email": user.email,
                 "role": user.role,
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30)  # Expiration date
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30)  # Expiration date.
             }, os.getenv('SECRET_KEY'), algorithm="HS256")
 
             refresh_token = jwt.encode({
@@ -183,14 +185,15 @@ def get_token():
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(days=60)
             }, os.getenv('SECRET_KEY'), algorithm="HS256")
 
+             # Prepare the response data with access and refresh tokens.
             response_data = {
                 "access_token": token,
                 "token_type": "Bearer",
                 "expires_in": 1200,
                 "refresh_token": refresh_token
             }
-            return jsonify(response_data), 200
+            return jsonify(response_data), 200 # Return the token data with HTTP 200.
         else:
-            return jsonify({"message": "You don't have permission"}), 401
+            return jsonify({"message": "You don't have permission"}), 401 # Return error if the user doesn't have the required role.
     else:
         return jsonify({"message": "Invalid credentials"}), 401
