@@ -1,7 +1,8 @@
+// Toggles the visibility of the navigation bar when the menu icon is clicked.
 const navBar = document.querySelector("nav");
 const menuBtns = document.querySelectorAll(".menu-icon");
 const midNavbar = document.getElementById("mid_nav");
-const overlay = document.getElementById("overlay"); // Ensure this element exists in your HTML.
+const overlay = document.getElementById("overlay"); 
 
 menuBtns.forEach((menuBtn) => {
   menuBtn.addEventListener("click", () => {
@@ -9,15 +10,18 @@ menuBtns.forEach((menuBtn) => {
   });
 });
 
+// Contract Management
+// Event listener for when a property is selected from the dropdown menu.
 document
   .getElementById("liked-properties")
   .addEventListener("change", function () {
     const selectedProperty = this.value;
     console.log(`Selected Property: ${selectedProperty}`);
-
     const contractTable = document.getElementById("contract-table-container");
     const tableBody = contractTable.querySelector("tbody");
 
+    //Need to ask lihiiiii
+    // Fetch contract data for the selected property.
     if (selectedProperty) {
       fetch(`/contract/${selectedProperty}`)
         .then((response) => {
@@ -29,12 +33,10 @@ document
         .then((data) => {
           const userType = data["userType"].trim();
           console.log("Fetched Contracts:", data);
-
-          // Clear existing table rows
           tableBody.innerHTML = "";
 
+          // Populate the table with contract data.
           if (data.contracts && data.contracts.length > 0) {
-            // Populate table with new data
             data.contracts.forEach((contract) => {
               const row = document.createElement("tr");
               row.innerHTML = `
@@ -65,6 +67,7 @@ document
         </td>
     `;
 
+              // Adds a delete button if the user is not a tenant.
               if (userType !== "Tenant" && userType !== "tenant") {
                 const deleteButton = `
             <td class="py-3 px-4 border-b text-gray-600">
@@ -77,7 +80,7 @@ document
               tableBody.appendChild(row);
             });
           } else {
-            // If no contracts found, show a message
+            // If no contracts are found, display a message.
             tableBody.innerHTML = `
                     <tr>
                         <td colspan="5" class="py-3 px-4 border-b text-gray-600 text-center">
@@ -87,7 +90,7 @@ document
                     `;
           }
 
-          // Show table if contracts are loaded
+          // Show the table if contracts are loaded.
           contractTable.classList.remove("hidden");
         })
         .catch((error) => {
@@ -102,13 +105,13 @@ document
           contractTable.classList.remove("hidden");
         });
     } else {
-      // Hide table if no property is selected
+      // Hide the table and clear rows if no property is selected.
       contractTable.classList.add("hidden");
       tableBody.innerHTML = "";
     }
   });
 
-// Function to return the status label with correct styling based on the contract status
+// Returns the status label with correct styling based on the contract status.
 function getStatusLabel(status) {
   switch (status) {
     case "signed":
@@ -122,6 +125,7 @@ function getStatusLabel(status) {
   }
 }
 
+// Displays the contract modal with contract details.
 function showContractModal(
   contractName,
   uploadDate,
@@ -135,12 +139,12 @@ function showContractModal(
     contractStatus
   );
 
-  // Populate modal content
+  // Populates modal content with contract details.
   document.getElementById("modal-contract-name").innerText = contractName;
   document.getElementById("modal-upload-date").innerText = uploadDate;
   document.getElementById("modal-contract-viewer").src = filePath;
 
-  // Show modal
+  // Show modal and manage sign button visibility.
   const modal = document.getElementById("contract-modal");
   if (modal) {
     modal.classList.remove("hidden");
@@ -161,11 +165,13 @@ function showContractModal(
   document.body.style.overflow = "hidden";
 }
 
+// Hides the contract modal and restores page scrolling.
 function closeContractModal() {
   document.getElementById("contract-modal").classList.add("hidden");
   document.body.style.overflow = "auto";
 }
 
+// Deletes a contract after user confirmation.
 function deleteContract(contractId) {
   const confirmation = confirm(
     "Are you sure you want to delete this contract?"
@@ -184,7 +190,7 @@ function deleteContract(contractId) {
       .then((data) => {
         if (data.message) {
           showSuccessMessage(data.message);
-          location.reload(); // Reload the page to reflect changes
+          location.reload(); 
         } else {
           showErrorMessage("An error occurred while deleting the contract.");
         }
@@ -193,11 +199,12 @@ function deleteContract(contractId) {
   }
 }
 
+// Initiates the document signing process for a contract.
 function signDocument(contractId) {
   console.log(`Initiating signing process for contract ID: ${contractId}`);
   const loadingMessage = "Fetching signing link...";
   showLoadingMessage(loadingMessage);
-  showSuccessMessage("Initiating signing process for contract! Wait few secs");
+  showSuccessMessage("Initiating signing process for contract! Wait a few seconds");
 
   fetch(`/sign_document/${contractId}`, {
     method: "POST",
@@ -227,6 +234,7 @@ function signDocument(contractId) {
     });
 }
 
+// Displays a success message.
 function showSuccessMessage(message) {
   const successMessageElement = document.getElementById("success-message");
   successMessageElement.innerHTML = message;
@@ -234,18 +242,22 @@ function showSuccessMessage(message) {
   setTimeout(() => successMessageElement.classList.add("hidden"), 5000);
 }
 
+// Displays an error message.
 function showErrorMessage(message) {
   const errorMessageElement = document.getElementById("error-message");
   errorMessageElement.innerHTML = message;
   errorMessageElement.classList.remove("hidden");
   setTimeout(() => errorMessageElement.classList.add("hidden"), 5000);
 }
+
+// Shows a loading message.
 function showLoadingMessage(message) {
   const loadingDiv = document.getElementById("loading-message");
   loadingDiv.style.display = "block";
   loadingDiv.querySelector("p").textContent = message;
 }
 
+// Hides the loading message.
 function hideLoadingMessage() {
   const loadingDiv = document.getElementById("loading-message");
   loadingDiv.style.display = "none";
