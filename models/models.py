@@ -2,7 +2,7 @@
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey, Enum, DateTime, Text, Date, Time, Boolean
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from ..database.db import Base
+from database.db import Base
 from enum import Enum as PyEnum
 from werkzeug.security import generate_password_hash, check_password_hash
 import enum
