@@ -1,10 +1,10 @@
+/* Importing fonts from Google Fonts. */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 * {
     margin: 0;
     padding: 0;
-
 }
 
 html {
@@ -30,7 +30,6 @@ body {
     --insta-color: #E1306C;
     --twitter-color: #00ACEE;
     --facebook-color: #3b5998;
-
 }
 
 .tab-button {
@@ -50,7 +49,6 @@ body {
     display: block;
 }
 
-/* utility */
 .sub-head {
     color: var(--black);
     font-size: 1.18rem;
@@ -175,7 +173,6 @@ ul li a.active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     margin-bottom: 25px;
 }
 
@@ -207,7 +204,6 @@ nav .profile-details {
     border-radius: 50%;
     cursor: pointer;
     background-color: #0F4880;
-
 }
 
 .profile-details img:hover {
@@ -235,7 +231,6 @@ nav .profile-details {
 
 .profile-initial span {
     font-size: 24px;
-    /* Adjust font size as needed */
     color: white;
 }
 
@@ -279,23 +274,17 @@ nav .profile-details {
     color: #22D3EE;
 }
 
-/* The Modal */
 .edit-profile-modal {
-    display: none;
-    /* Hidden by default */
-    position: fixed;
-    /* Stay in place */
+    display: none; /* Hidden by default. */
+    position: fixed; /* Stay in place. */
     z-index: 1;
-    /* Sit on top */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
     background-color: rgb(0, 0, 0);
-    /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
@@ -306,7 +295,7 @@ nav .profile-details {
     position: relative;
 }
 
-/* Close Button */
+/* Close Button. */
 .close-modal {
     font-size: 28px;
     top: 42px;
@@ -333,7 +322,6 @@ nav .profile-details {
     background-color: #20C8E2;
 }
 
-/* brief intro about */
 .container {
     height: 80vh;
     max-width: 800px;
@@ -364,7 +352,6 @@ p {
     color: #20C8E2;
 }
 
-
 .icon-ball-behind {
     opacity: 0.2;
     position: absolute;
@@ -377,11 +364,11 @@ p {
     color: rgb(214, 238, 254);
 }
 
+/* Ensure the icon stays behind the text. */
 .icon-timer-behind {
     opacity: 0.2;
     position: absolute;
     z-index: 1;
-    /* Ensure the icon stays behind the text */
     top: 6%;
     left: 20%;
     right: 9%;
@@ -400,7 +387,6 @@ p {
     transform: translate(-50%, -50%);
     transform: translate(132px, -54px);
     color: rgb(214, 238, 254);
-
 }
 
 .hero-section::before {
