@@ -1,38 +1,44 @@
+// Selects navigation bar and menu button elements.
 const navBar = document.querySelector("nav");
 const menuBtns = document.querySelectorAll(".menu-icon");
 const midNavbar = document.getElementById("mid_nav");
 const overlay = document.getElementById("overlay");
 
+// Adds event listeners to each menu button to toggle the `open` class on the navbar when clicked.
 menuBtns.forEach((menuBtn) => {
   menuBtn.addEventListener("click", () => {
     navBar.classList.toggle("open");
   });
 });
 
+// Redirects the user to a specified URL.
 function updateUrl(action) {
   window.location.href = action;
 }
 
-///////////////// Report Page
+// Hides the report table and displays the report form.
 function showReportForm() {
   document.getElementById("report-table-container").style.display = "none";
   document.getElementById("report-form-container").style.display = "block";
   document.getElementById("add-report-btn").style.display = "none";
 }
 
+// Hides the report form and displays the report table.
 function showReportTable() {
   document.getElementById("report-table-container").style.display = "block";
   document.getElementById("report-form-container").style.display = "none";
   document.getElementById("add-report-btn").style.display = "block";
 }
+
+// Adds functionality to select a rating by clicking on stars.
 document
   .getElementById("rating-stars")
   .addEventListener("click", function (event) {
     if (event.target && event.target.classList.contains("star")) {
       const ratingValue = event.target.getAttribute("data-value");
-
+      // Sets the selected rating in a hidden input field.
       document.getElementById("professional_rating").value = ratingValue;
-
+      // Updates the star icons based on the selected rating.
       const stars = document.querySelectorAll(".star");
       stars.forEach((star) => {
         if (parseInt(star.getAttribute("data-value")) <= ratingValue) {
@@ -44,38 +50,37 @@ document
     }
   });
 
+// Handles the submission of the report form.
 document
   .getElementById("report-form")
   .addEventListener("submit", async (event) => {
     event.preventDefault();
-
+    // Retrieves form input values.
     const propertyId = document.getElementById("property_name").value;
     const faultDescription = document.getElementById("fault_description").value;
     const faultDetails = document.getElementById("fault_details").value;
     const professionalName = document.getElementById("professional_name").value;
     const professionalRating = document.getElementById(
       "professional_rating"
-    ).value; // Get selected rating
-    const photos = document.getElementById("fault_image").files; // Get files from the input field
-
+    ).value; 
+    const photos = document.getElementById("fault_image").files;
     const formData = new FormData();
     formData.append("property_id", propertyId);
     formData.append("fault_description", faultDescription);
     formData.append("fault_details", faultDetails);
     formData.append("professional_name", professionalName);
     formData.append("professional_rating", professionalRating);
-
-    // Check if photos are selected
+    // Checks if photos are selected and appends them to the form data.
     if (photos.length > 0) {
       for (let i = 0; i < photos.length; i++) {
-        formData.append("fault_image", photos[i]); // Append each file as "fault_image"
+        formData.append("fault_image", photos[i]); 
       }
     } else {
       showErrorMessage("Please upload fault property photo.");
       return;
     }
 
-    // Send data to the server
+    // Sends the form data to the server.
     try {
       const response = await fetch("/property-add-fault", {
         method: "POST",
@@ -87,13 +92,13 @@ document
       } else {
         const data = await response.json();
         showSuccessMessage(data.message);
+        // Clears the form fields after submission.
         propertyId.value = "";
         faultDescription.value = "";
         faultDetails.value = "";
         professionalName.value = "";
         professionalRating.value = "";
         photos.value = "";
-
         window.location.href = "/property";
       }
     } catch (error) {
@@ -101,6 +106,7 @@ document
     }
   });
 
+// Fetches fault reports from the server.
 function fetchFaultReports() {
   fetch("/fetch-reports")
     .then((response) => {
@@ -119,11 +125,10 @@ function fetchFaultReports() {
     .catch((error) => console.error("Error fetching reports:", error));
 }
 
-// Function to populate the report table with fetched data
+// Adds rows to the report table based on the fetched fault reports.
 function populateReportTable(reports) {
   const tableBody = document.getElementById("report-table-body");
-  tableBody.innerHTML = ""; // Clear existing rows
-
+  tableBody.innerHTML = "";
   reports.forEach((report) => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -142,15 +147,17 @@ function populateReportTable(reports) {
   });
 }
 
-// Utility function to generate rating stars based on professional rating
+// Creates a string of star icons based on the professional rating.
 function getRatingStars(rating) {
   return Array.from({ length: 5 }, (_, i) => (i < rating ? "★" : "☆")).join("");
 }
 
+// Fetches fault reports when the window loads.
 window.onload = function () {
   fetchFaultReports();
 };
 
+// Displays a success message for 5 seconds.
 function showSuccessMessage(message) {
   const successMessageElement = document.getElementById("success-message");
   successMessageElement.innerHTML = message;
@@ -158,6 +165,7 @@ function showSuccessMessage(message) {
   setTimeout(() => successMessageElement.classList.add("hidden"), 5000);
 }
 
+// Displays an error message for 5 seconds.
 function showErrorMessage(message) {
   const errorMessageElement = document.getElementById("error-message");
   errorMessageElement.innerHTML = message;
