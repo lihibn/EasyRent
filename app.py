@@ -16,14 +16,6 @@ import jwt
 import os
 from flask_cors import CORS
 
-"""
-#firebase
-import firebase_admin
-from firebase_admin import credentials
-
-cred = credentials.Certificate("/easyrent-94f4e-firebase-adminsdk-ici6o-d110ad3227.json")
-firebase_admin.initialize_app(cred)
-"""
 
 app = Flask(__name__)
 CORS(app)  # This will allow all origins by default
@@ -86,9 +78,6 @@ def add_cors_headers(response):
 
 with app.app_context():
     Base.metadata.create_all(bind=engine)
-"""
-if __name__ == "__main__":
-    app.run(debug=True)
-"""
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
