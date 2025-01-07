@@ -32,14 +32,14 @@
         <!-- Price Range -->
         <div class="flex flex-col sm:flex-row gap-4 sm:space-x-4">
           <input type="number" id="price-min" placeholder="Min $"
-            class="w-full p-3 border border-gray-300 rounded-sm text-gray-800" />
+            class="w-full p-3 border border-gray-300 rounded-sm text-gray-800"  min="1" oninput="validatePositiveNumber(this)" required/>
           <input type="number" id="price-max" placeholder="Max $"
-            class="w-full p-3 border border-gray-300 rounded-sm text-gray-800" />
+            class="w-full p-3 border border-gray-300 rounded-sm text-gray-800" min="1" oninput="validatePositiveNumber(this)" required/>
         </div>
 
         <!-- Property Type Dropdown -->
         <div>
-          <select id="property-type" class="w-full p-3 border border-gray-300 rounded-sm text-gray-800">
+          <select id="property-type" class="w-full p-3 border border-gray-300 rounded-sm text-gray-800" required>
             <option value="" disabled selected hidden>
               Select Property Type
             </option>
@@ -53,7 +53,7 @@
         <!-- Number of Rooms -->
         <div>
           <input type="number" id="rooms" placeholder="Number of Rooms"
-            class="w-full p-3 border border-gray-300 rounded-sm text-gray-800" />
+            class="w-full p-3 border border-gray-300 rounded-sm text-gray-800"  min="1" oninput="validatePositiveNumber(this)" required/>
         </div>
 
         <!-- Submit Button -->
