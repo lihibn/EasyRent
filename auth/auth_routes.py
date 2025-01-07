@@ -10,64 +10,70 @@ from werkzeug.security import check_password_hash
 from dotenv import load_dotenv
 import os
 
+# Load environment variables from a .env file into the application's environment.
 load_dotenv()
 
+# Define a blueprint for organizing authentication related routes.
 auth_routes = Blueprint('auth_routes', __name__)
 
+# Retrieve the secret key from environment variables for secure operations.
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 
 @auth_routes.route('/register', methods=['POST'])
 def register():
-    # Check if the auth_token cookie is already present
+    # Check if the auth_token cookie is already present.
     auth_token = request.cookies.get('auth_token')
     if auth_token:
         try:
-            # Decode the token to check if it's valid
+            # Decode the token to check if it's valid.
             jwt.decode(auth_token, os.getenv('SECRET_KEY'), algorithms=["HS256"])
             return jsonify({"message": "Please login, you are already logged in."}), 401
         except jwt.ExpiredSignatureError:
-            return jsonify({"message": "Session expired, please log in again."}), 401
+            return jsonify({"message": "Session expired, please log in again."}), 401 # Handle expired JWT token.
         except jwt.InvalidTokenError:
-            return jsonify({"message": "Please log in again."}), 401
+            return jsonify({"message": "Please log in again."}), 401 # Handle invalid JWT token
 
+    # Retrieve JSON data from the request body.
     data = request.get_json()
     if not data:
         return jsonify({"message": "Missing JSON"}), 400
-
+        
+    # Extract user details from the JSON payload.
     full_name = data.get('full_name')
     email = data.get('email')
     password = data.get('password')
     role = data.get('role', 'tenant')
 
+    # Validate required fields.
     if not full_name or not email or not password:
         return jsonify({"message": "Missing required fields"}), 400
 
-    session_db = SessionLocal()
+    session_db = SessionLocal() # Open a new database session.
     try:
-        # Check if the user already exists
+        # Check if a user with the provided email already exists.
         if session_db.query(User).filter_by(email=email).first():
             return jsonify({"message": "User already exists"}), 409
 
-        # Hash the password using bcrypt
+        # Hash the password using bcrypt.
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-        # Create a new user
+        # Create a new user object with hashed password.
         new_user = User(full_name=full_name, email=email, role=role, password=hashed_password.decode('utf-8'))
         session_db.add(new_user)
         session_db.commit()
 
-        # Create JWT token
+        # Create JWT token.
         token = jwt.encode({
             "email": email,
             "role": role,
             "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30)
         }, os.getenv('SECRET_KEY'), algorithm="HS256")
 
-        # Prepare the response with the JWT token
+        # Create an HTTP response with the JWT token.
         resp = make_response(jsonify({"message": "User created successfully", "token": token}))
 
-        # Set the token in the cookie
+        # Set the token in the cookie.
         resp.set_cookie('auth_token', token, httponly=True, secure=True, samesite='None')
         print(resp)
         return resp
@@ -75,32 +81,36 @@ def register():
         session_db.rollback()
         return jsonify({"message": "Internal server error"}), 500
     finally:
-        session_db.close()
+        session_db.close()  # Close the database session.
 
 
 @auth_routes.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
+    # Return error if no JSON data is provided.
     if not data:
         return jsonify({"message": "Missing JSON"}), 400
-
+    
+    # Extract email and password from the JSON payload.
     email = data.get('email')
     password = data.get('password')
 
-    session = SessionLocal()
+    session = SessionLocal() # Open a new database session.
     user = session.query(User).filter_by(email=email).first()
 
     if not email or not password:
-        return jsonify({"message": "Missing required fields"}), 400
+        return jsonify({"message": "Missing required fields"}), 400 # Return error if required fields are missing.
 
+    # Check if the user exists and verify the password.
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
         role = user.role_as_string if user.role else 'guest'
-
+        
+        # Update the last login timestamp.
         user.last_login = datetime.datetime.utcnow()
-        session.add(user)  # Add the user back to the session
-        session.commit()  # Save
+        session.add(user)  # Add the user back to the session.
+        session.commit()
 
-        # Generate JWT token
+        # Generate JWT token.
         token = jwt.encode({
             "user_id": user.id,
             "email": email,
@@ -108,9 +118,9 @@ def login():
             "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30)
         }, os.getenv('SECRET_KEY'), algorithm="HS256")
         print(token)
-        # Prepare response with token
+        # Prepare the HTTP response with the JWT token.
         resp = make_response(jsonify({"message": "Login successful", "token": token}))
-        # Set the token as a cookie
+        # Set the token in an HTTP-only cookie.
         resp.set_cookie('auth_token', token, httponly=True, secure=True, samesite='None')
 
         return resp, 200
