@@ -1,17 +1,17 @@
 from flask import Flask, render_template, request, jsonify, session, make_response, abort, redirect, current_app, url_for
 from flask_oauthlib.client import OAuth
 from urllib.parse import quote, unquote, urlencode
-from .database.db import engine, SessionLocal, Base
-from .models.models import User, Property, Payment, Contract
-from .auth.auth_routes import auth_routes
-from .routes.property_routes import property_routes
-from .routes.meeting_routes import meeting_routes
-from .routes.contract_routes import contract_routes
-from .routes.payment_routes import payment_routes
-from .routes.fault_routes import fault_routes
-from .routes.external_service import external_service_routes
-from .config import Config
-from .auth.auth_utils import get_user_from_token
+from database.db import engine, SessionLocal, Base
+from models.models import User, Property, Payment, Contract
+from auth.auth_routes import auth_routes
+from routes.property_routes import property_routes
+from routes.meeting_routes import meeting_routes
+from routes.contract_routes import contract_routes
+from routes.payment_routes import payment_routes
+from routes.fault_routes import fault_routes
+from routes.external_service import external_service_routes
+from config import Config
+from auth.auth_utils import get_user_from_token
 import jwt
 import os
 from flask_cors import CORS
