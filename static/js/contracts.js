@@ -20,7 +20,6 @@ document
     const contractTable = document.getElementById("contract-table-container");
     const tableBody = contractTable.querySelector("tbody");
 
-    //Need to ask lihiiiii
     // Fetch contract data for the selected property.
     if (selectedProperty) {
       fetch(`/contract/${selectedProperty}`)
@@ -40,28 +39,22 @@ document
             data.contracts.forEach((contract) => {
               const row = document.createElement("tr");
               row.innerHTML = `
-        <td class="py-3 px-4 border-b text-gray-600">${contract.property_name
-                }</td>
+        <td class="py-3 px-4 border-b text-gray-600">${contract.property_name}</td>
         <td class="py-3 px-4 border-b text-gray-600">
             ${getStatusLabel(contract.status)}
         </td>
-        <td class="py-3 px-4 border-b text-gray-600">${contract.date_uploaded
-                }</td>
+        <td class="py-3 px-4 border-b text-gray-600">${contract.date_uploaded}</td>
         <td class="py-3 px-4 border-b text-gray-600">
             <button class="text-blue-500"
-                onclick="showContractModal('${contract.property_name.replace(
-                  /'/g,
-                  "\\'"
-                )}',
+                onclick="showContractModal('${contract.property_name.replace(/'/g,"\\'")}',
                                            '${contract.date_uploaded}',
                                            '${contract.contract_file
                   ? contract.contract_file
                     .replace(/\\/g, "\\\\")
                     .replace(/'/g, "\\'")
-                  : ""
-                }',
-                                           ${contract.id},
-                                           '${contract.status}')">
+                  : ""}',
+                  ${contract.id},
+                  '${contract.status}')">
                 View Contract
             </button>
         </td>
@@ -76,7 +69,6 @@ document
         `;
                 row.innerHTML += deleteButton;
               }
-
               tableBody.appendChild(row);
             });
           } else {
