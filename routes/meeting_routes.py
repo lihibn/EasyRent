@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, jsonify, session, make_response, redirect
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-from ..models.models import User, Property, Meeting
-from ..database.db import SessionLocal
+from models.models import User, Property, Meeting
+from database.db import SessionLocal
 import datetime
 import jwt
 
