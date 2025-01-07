@@ -1,34 +1,33 @@
-// Navabar sidbar
+// Selects the navbar, menu buttons, and overlay elements from the DOM.
 const navBar = document.querySelector("nav");
 const menuBtns = document.querySelectorAll(".menu-icon");
 const midNavbar = document.getElementById("mid_nav");
-const overlay = document.getElementById("overlay"); // Ensure this element exists in your HTML.
+const overlay = document.getElementById("overlay"); 
 
+// Adds a click event listener to each menu button to toggle the "open" class on the navbar.
 menuBtns.forEach((menuBtn) => {
   menuBtn.addEventListener("click", () => {
     navBar.classList.toggle("open");
   });
 });
 
+// Waits for the DOM to fully load before adding functionality to the filter form.
 document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("filter-form")
     .addEventListener("submit", function (e) {
-      e.preventDefault(); // Prevent default form submission
+      e.preventDefault(); 
 
-      // Get filter values
+      // Retrieves the filter values entered by the user.
       const city = document.getElementById("city").value.trim();
       const minPrice = document.getElementById("price-min").value || 0;
       const maxPrice = document.getElementById("price-max").value || 9999999;
       console.log(minPrice);
-
       const propertyType = document
         .getElementById("property-type")
         .value.trim();
       const rooms = document.getElementById("rooms").value;
 
-
-      // Build query string
       const queryParams = new URLSearchParams({
         city,
         price_min: minPrice,
@@ -36,13 +35,17 @@ document.addEventListener("DOMContentLoaded", function () {
         property_type: propertyType,
         rooms,
       });
+      
+      // Validates that all filter values are greater than zero.
       if (minPrice <= 0 || maxPrice <= 0 || rooms <= 0) {
         showErrorMessage("The values for Price-Min, Price-Max, and Rooms must be greater than zero");
       } else {
+        // Sends a GET request to the server with the query parameters for property filtering.
         fetch(`/property/filter-search?${queryParams.toString()}`)
           .then((response) => {
             console.log(response);
 
+            // Checks if the response is not successful and displays an error message if no properties are found.
             if (!response.ok) {
               showErrorMessage("No properties found matching the criteria.");
             }
@@ -51,12 +54,13 @@ document.addEventListener("DOMContentLoaded", function () {
           .then((data) => {
             console.log(data);
 
+            // Extracts properties from the server response or sets an empty array if none exist.
             const properties = data.properties || [];
-            // Update the filtered properties section
             const filteredSection = document.getElementById("filteredProperties");
             const propertyCardsContainer = filteredSection.querySelector(".grid");
-            propertyCardsContainer.innerHTML = ""; // Clear previous results
+            propertyCardsContainer.innerHTML = "";
 
+            // Iterates over the array of properties and creates a card for each property.
             if (properties.length > 0) {
               properties.forEach((property) => {
                 console.log(property.square_meters);
@@ -69,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   "rounded-sm",
                   "overflow-hidden"
                 );
+                // Populates the property card with property details such as name, city, rooms, and price.
                 propertyCard.innerHTML = `
              <div class="relative">
               <img src=${property.propertyImg
@@ -194,31 +199,40 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
             </div>
             `;
+                
+                // Appends the newly created card to the container.
                 propertyCardsContainer.appendChild(propertyCard);
               });
+              
+              // Reveals the filtered properties section and hides the featured property section.
               filteredSection.classList.remove("hidden");
               showSuccessMessage(data.message);
               document
                 .getElementById("featured-property")
                 .classList.add("hidden");
             } else {
+              // Displays a message if no properties are found.
               propertyCardsContainer.innerHTML =
                 "<p class='text-gray-600'>No properties found.</p>";
               showErrorMessage(data.message);
             }
           })
+
+          // Logs the error and displays an error message to the user.
           .catch((error) => {
             console.error("Error fetching properties:", error);
             showSuccessMessage(error);
+            
+            // Updates the UI to indicate an error occurred.
             const filteredSection = document.getElementById("filteredProperties");
             const propertyCardsContainer = filteredSection.querySelector(".grid");
             propertyCardsContainer.innerHTML = `<p class='text-red-600'>Error: ${error.message}</p>`;
           });
       }
-
     });
 });
 
+// Handles the "View More" button click to display detailed information about a property in a popup.
 function viewMoreInfo(
   name,
   city,
@@ -235,6 +249,8 @@ function viewMoreInfo(
   building_maintenance,
   imageUrl
 ) {
+
+  // Calls a function to show the popup with the property information.
   showPopupWithPropertyInfo(
     name,
     city,
@@ -253,6 +269,7 @@ function viewMoreInfo(
   );
 }
 
+// Creates and displays a popup containing the detailed information about a property.
 function showPopupWithPropertyInfo(
   name,
   city,
@@ -269,6 +286,7 @@ function showPopupWithPropertyInfo(
   building_maintenance,
   imageUrl
 ) {
+  // Generates the HTML content for the popup with property details.
   const popupContent = `
   <div class="popup-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" role="dialog" aria-modal="true">
     <div class="popup-content bg-white rounded-lg shadow-lg w-full max-w-lg md:max-w-xl lg:max-w-md p-0 relative transform transition-all duration-300 scale-95 hover:scale-100">
@@ -362,42 +380,43 @@ function showPopupWithPropertyInfo(
   </div>
   `;
 
-  // Add popup to DOM
   document.body.insertAdjacentHTML("beforeend", popupContent);
-
-  // Close popup
   document.querySelector(".close-popup").addEventListener("click", () => {
     document.querySelector(".popup-overlay").remove();
   });
 
-  // Tab functionality
+  // Selects all tab buttons and tab panels from the document.
   const tabButtons = document.querySelectorAll(".tab-button");
   const tabPanels = document.querySelectorAll(".tab-panel");
 
+  // Adds an event listener to each tab button to handle tab switching.
   tabButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
       const targetTab = button.getAttribute("data-tab");
 
-      // Deactivate all buttons and hide all panels
+      // Loops through all tab buttons to remove the 'active-tab' class and set `aria-selected` to false.
       tabButtons.forEach((btn) => {
         btn.classList.remove("active-tab");
         btn.setAttribute("aria-selected", "false");
       });
       tabPanels.forEach((panel) => panel.classList.add("hidden"));
 
-      // Activate the clicked button and show the corresponding panel
+      // Adds the 'active-tab' class and sets `aria-selected` to true for the clicked button.
       button.classList.add("active-tab");
       button.setAttribute("aria-selected", "true");
+      // Removes the 'hidden' class from the tab panel corresponding to the clicked button.
       document.querySelector(`.tab-${targetTab}`).classList.remove("hidden");
     });
   });
 }
 
+// Redirects the user to the "/meeting" page.
 function redirectToMeetings() {
   window.location.href = "/meeting";
 }
 
+// Displays a success message to the user.
 function showSuccessMessage(message) {
   const successMessageElement = document.getElementById("success-message");
   successMessageElement.innerHTML = message;
@@ -405,6 +424,7 @@ function showSuccessMessage(message) {
   setTimeout(() => successMessageElement.classList.add("hidden"), 5000);
 }
 
+// Displays an error message to the user.
 function showErrorMessage(message) {
   const errorMessageElement = document.getElementById("error-message");
   errorMessageElement.innerHTML = message;
@@ -412,6 +432,7 @@ function showErrorMessage(message) {
   setTimeout(() => errorMessageElement.classList.add("hidden"), 5000);
 }
 
+// Ensures that the input value is a positive number greater than zero.
 function validatePositiveNumber(input) {
   if (input.value === "") {
     return;
