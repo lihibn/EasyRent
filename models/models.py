@@ -1,4 +1,4 @@
-# Imports section
+# Import necessary modules and libraries for database table definitions and relationships.
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey, Enum, DateTime, Text, Date, Time, Boolean
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
@@ -9,17 +9,15 @@ import enum
 import bcrypt
 import datetime
 
-
+# Defines the roles a user can have in the system.
 class UserRole(enum.Enum):
     landlord = "Landlord"
     tenant = "Tenant"
     developer = "Developer"
 
-
-# User table
+# Represents the users of the system with attributes like name, email, password, role, etc.
 class User(Base):
     __tablename__ = 'users'
-
     id = Column(Integer, primary_key=True)
     full_name = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, nullable=False)
@@ -27,27 +25,25 @@ class User(Base):
     role = Column(String(100), nullable=False)
     created_at = Column(DateTime, server_default=func.now())
     last_login = Column(DateTime, nullable=True)
-
+    
+    # Relationship to FaultReport table.
     fault_reports = relationship('FaultReport', back_populates='user')
 
+    # Sets a hashed password using Werkzeug.
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
+    # Checks if the provided password matches the stored hash
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+    # Debugging representation for user instances
     def __repr__(self):
         return f"<User(id={self.id}, full_name='{self.full_name}', email='{self.email}', role='{self.role}')>"
 
-    # @property
-    # def role_as_string(self):
-    #     return self.role.value
-
-
-# Fault report table
+# Represents reports related to property faults, submitted by users.
 class FaultReport(Base):
     __tablename__ = 'fault_reports'
-
     id = Column(Integer, primary_key=True, index=True)
     property_id = Column(Integer, ForeignKey('properties.id'), nullable=False)
     professional_name = Column(String, nullable=False)
@@ -61,7 +57,7 @@ class FaultReport(Base):
     user = relationship('User', back_populates='fault_reports')
 
 
-# Property table
+# Represents properties in the system with details like address, type, rent, etc.
 class Property(Base):
     __tablename__ = 'properties'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -86,25 +82,20 @@ class Property(Base):
     meeting_slots = relationship('Meeting', back_populates='property')
     fault_reports = relationship('FaultReport', back_populates='property')
 
-
-# Meeting table
+# Represents meeting slots for property viewings or discussions.
 class Meeting(Base):
     __tablename__ = 'meeting_slots'
-
     id = Column(Integer, primary_key=True, autoincrement=True)
     property_id = Column(Integer, ForeignKey('properties.id'))
     user_id = Column(Integer, ForeignKey('users.id'))
-
     date = Column(Date, nullable=False)
     time = Column(Time, nullable=False)
     attendee = Column(String(100), nullable=True)
     is_available = Column(Boolean, default=True)
-
     property = relationship('Property', back_populates='meeting_slots')
     meet_owner = relationship('User', backref='meetings')
 
-
-# Payment table
+# Represents payments made for properties.
 class Payment(Base):
     __tablename__ = 'payments'
     id = Column(Integer, primary_key=True)
@@ -116,11 +107,9 @@ class Payment(Base):
     property_id = Column(Integer, ForeignKey('properties.id'))
     property = relationship('Property', backref='payments')
 
-
-# Contract table
+# Represents contracts signed for properties.
 class Contract(Base):
     __tablename__ = 'contracts'
-
     id = Column(Integer, primary_key=True)
     file_url = Column(String(200), nullable=False)
     status = Column(String, nullable=False)
@@ -129,9 +118,9 @@ class Contract(Base):
     property_id = Column(Integer, ForeignKey('properties.id'))
     tenant_id = Column(Integer, ForeignKey('users.id'))
     is_deleted = Column(Boolean, default=False)
-
     property = relationship('Property', backref='contracts')
     tenant = relationship('User', foreign_keys=[tenant_id], backref='tenant_contracts')
 
+    # Debugging representation for contract instances.
     def __repr__(self):
         return f"<Contract(id={self.id}, status='{self.status}', file_url='{self.file_url}', tenant_id={self.tenant_id}, landlord_id={self.landlord_id})>"
