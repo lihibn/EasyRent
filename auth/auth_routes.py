@@ -131,10 +131,10 @@ def login():
 
 @auth_routes.route('/logout', methods=['GET'])
 def logout():
-    # Prepare a response to redirect to the home page
+    # Prepare a response to redirect to the home page.
     resp = make_response(redirect('/'))
 
-    # Clear the auth token cookie
+    # Clear the auth token cookie.
     resp.set_cookie('auth_token', '', expires=0, httponly=True, secure=True, samesite='Strict')
 
     return resp
@@ -143,8 +143,8 @@ def logout():
 @auth_routes.route("/sign-in", methods=["GET", "POST"])
 def signIn():
     auth_token = request.cookies.get('auth_token')
-    user = None
-    user_role = None
+    user = None # Initialize user to None.
+    user_role = None # Initialize user role to None.
 
     return render_template('sign_in.html', user=user, user_type=user_role)
 
