@@ -6,7 +6,11 @@
 
 {% block content %}
 
+<!--Checks if the user type is "Landlord".-->
+
 {% if user_type == "Landlord" or user_type == "landlord" %}
+
+<!--Button to navigate back to the listing page. -->
 
 <div id="property-form" class="max-w-screen-lg mx-auto my-6 p-6 bg-white fade-in px-4 md:px-12 lg:px-20">
     <button type="button" onclick="updateUrl('property')" id="back-to-listing-btn"
@@ -28,7 +32,10 @@
             <div id="progress-bar-step-4" class="bg-black h-2 rounded-r-full" style="width: 0%"></div>
         </div>
     </div>
+
+    <!--Form for property details.-->
     <form enctype="multipart/form-data" id="propertyForm">
+          <!--Step 1: General Details.-->
         <div id="step-1" class="step mt-4">
             <h2 class="text-xl font-semibold text-black">General Details</h2>
             <p class="text-sm text-gray-600 mt-2">
@@ -116,7 +123,8 @@
                 Continue
             </button>
         </div>
-
+        
+         <!-- Step 2: Payments. -->
         <div id="step-2" class="step hidden">
             <h2 class="text-xl font-semibold text-black">Payments</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -145,7 +153,8 @@
                 </button>
             </div>
         </div>
-
+        
+        <!-- Step 3: Meeting. -->
         <div id="step-3" class="step hidden">
             <h2 class="text-xl font-semibold text-black">Meeting</h2>
             <p class="text-sm text-gray-600 mt-2">
@@ -189,6 +198,7 @@
             </div>
         </div>
 
+        <!-- Step 4: Contract. -->
         <div id="step-4" class="step hidden">
             <h2 class="text-xl font-semibold text-black">Contract Upload</h2>
             <p class="text-sm text-gray-600 mt-2">
