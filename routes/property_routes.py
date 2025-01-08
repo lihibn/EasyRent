@@ -1,3 +1,4 @@
+# Import necessary modules and libraries.
 from flask import Blueprint, request, render_template, jsonify, session, make_response, redirect
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from models.models import User, Property, Meeting, Contract
@@ -10,31 +11,31 @@ import json
 from dotenv import load_dotenv
 import os
 
+# Load environment variables from the .env file.
 load_dotenv()  # Load environment variables from .env file
 
-# Secret key for JWT
+# Secret key for JWT.
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# Configuration for file storage
-UPLOAD_FOLDER = './uploads'  # Base upload directory
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf', 'docx'}  # Allowed file types
+# File upload configuration.
+UPLOAD_FOLDER = './uploads' 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf', 'docx'}
 
 property_routes = Blueprint('property_routes', __name__)
 
-
-# Helper function to check if a file has an allowed extension
+# Helper function to check if a file extension is allowed
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# Route for handling property actions
+# Route to handle property-related actions.
 @property_routes.route('/property/<action>', methods=['GET', 'POST'])
 @property_routes.route('/property', methods=['GET', 'POST'])
 def property(action=None):
     auth_token = request.cookies.get('auth_token')
     user = None
     user_role = None
-
+# Validate the user.
     if auth_token:
         try:
             decoded_token = jwt.decode(auth_token, SECRET_KEY, algorithms=["HS256"])
@@ -50,25 +51,30 @@ def property(action=None):
     session = SessionLocal()
     if user_role and user_role.lower() == "landlord":
         try:
+# Render "Add Property" page (GET).
             if (action == "add-property" and request.method == "GET"):
                 print(action)
                 return render_template('add_property.html', user=user, user_type=user_role, action=action)
 
+# Handle adding a new property (POST).
             if action == "add-property" and request.method == "POST":
                 data = request.form
                 user_id = user.id
 
+# Retrieve property data.
                 property_name = data.get('propertyName')
                 if not property_name:
                     return jsonify({"message": "Property name is required."}), 400
                 property_name = secure_filename(property_name)
 
+# Create directories for property files.
                 base_path = os.path.join('static', 'property', f'user-{user_id}', f'property-{property_name}')
                 pictures_path = os.path.join(base_path, 'picture')
                 contract_path = os.path.join(base_path, 'contract')
                 os.makedirs(pictures_path, exist_ok=True)
                 os.makedirs(contract_path, exist_ok=True)
 
+# Handle property photos upload.
                 uploaded_photos = request.files.getlist('property_photos')
                 if not uploaded_photos:
                     return jsonify({"message": "At least one property photo is required."}), 400
@@ -83,12 +89,13 @@ def property(action=None):
 
                 contract_file = request.files.get('contract_path')
 
+# Handle contract upload.
                 contract_name = secure_filename(contract_file.filename)
                 contract_file_path = os.path.join(contract_path, f'contract-{contract_name}')
                 contract_file.save(contract_file_path)
 
+# Parse entry date.
                 entry_date_str = data.get('entry_date')
-
                 entry_date = None
 
                 if entry_date_str:
@@ -100,6 +107,7 @@ def property(action=None):
                 else:
                     property_id_valid = 1
 
+# Create a new property record.
                 new_property = Property(
                     owner_id=user_id,
                     property_name=property_name,
@@ -120,18 +128,20 @@ def property(action=None):
                     contract_path=contract_file_path
                 )
 
+# Add contract record.
                 new_contract = Contract(property_id=property_id_valid, file_url=contract_file_path, status="pending")
                 session.add(new_property)
                 session.add(new_contract)
                 session.flush()
-
+                
+# Process meeting details.
                 meetings_json = data.get('meetings')
                 try:
                     meetings = json.loads(meetings_json)
                 except json.JSONDecodeError:
                     return jsonify({"message": "Invalid JSON format for 'meetings' field."}), 400
 
-                # Loop through and save each meeting
+# Loop through and save each meeting
                 for meeting in meetings:
                     meeting_date = datetime.datetime.strptime(meeting['date'], "%Y-%m-%d").date()
                     meeting_time = datetime.datetime.strptime(meeting['time'], "%H:%M").time()
@@ -148,6 +158,7 @@ def property(action=None):
 
                 return jsonify({"message": "Property added successfully!"}), 200
 
+# Fetch and render properties for the landlord.
             properties = session.query(Property).filter(Property.owner_id == user.id).all()
 
             return render_template('property.html', user=user, user_type=user_role, action=action,
@@ -163,11 +174,13 @@ def property(action=None):
 
 
 @property_routes.route('/property/filter-search', methods=['GET'])
+# Retrieve the authentication token from cookies.
 def propertyFilter():
     auth_token = request.cookies.get('auth_token')
     print(auth_token)
     user = None
     user_role = None
+# Decode the authentication token to verify the user.
     if auth_token:
         try:
             decoded_token = jwt.decode(auth_token, SECRET_KEY, algorithms=["HS256"])
@@ -182,9 +195,10 @@ def propertyFilter():
         except jwt.InvalidTokenError:
             return jsonify({"message": "Please sign in again."}), 401
 
+# Create a new database session.
     session = SessionLocal()
     try:
-        # Extract query parameters
+# Extract query parameters from the request.
         city = request.args.get('city').lower()
         price_min = request.args.get('price_min', type=float, default=0)
         price_max = request.args.get('price_max', type=float, default=float('inf'))
@@ -192,8 +206,10 @@ def propertyFilter():
         rooms = request.args.get('rooms', type=int, default=0)
         print(city, price_min, price_max, property_type, rooms)
 
+# Initialize query for filtering properties.
         query = session.query(Property)
-
+        
+# Apply filters based on the provided query parameters.
         if city:
             query = query.filter(Property.city.ilike(city))
         if price_min:
@@ -205,10 +221,12 @@ def propertyFilter():
         if rooms:
             query = query.filter(Property.rooms >= rooms)
 
+# Retrieve the filtered properties.
         properties = query.all()
         if not properties:
             return jsonify({"message": "No properties found matching the criteria."}), 404
 
+ # Prepare the property data to be returned as JSON.
         properties_data = [
             {
                 "id": property.id,
@@ -230,9 +248,11 @@ def propertyFilter():
             }
             for property in properties
         ]
+# Return the filtered properties with a success message.
         return jsonify({"message": "Properties retrieved successfully!", "properties": properties_data,
                         "userType": user_role}), 200
-
+        
+# Handle any exceptions during the filtering process.
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"message": "An error occurred while retrieving properties.", "error": str(e)}), 500
