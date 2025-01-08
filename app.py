@@ -34,8 +34,21 @@ app.register_blueprint(payment_routes)
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+#Lihi change it
+#@app.route("/")
 
-@app.route("/")
+#Lihi added it
+@app.route('/list-files', methods=['GET'])
+def list_files():
+    # Change the directory path to where your SQLite DB is stored
+    directory = '/opt/render/project/src'  # Update to the actual path
+    try:
+        files = os.listdir(directory)
+        return jsonify({"files": files})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+#until here
+
 def index():
     auth_token = request.cookies.get('auth_token')
     print(auth_token)
