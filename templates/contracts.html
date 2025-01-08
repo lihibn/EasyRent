@@ -5,9 +5,10 @@
 {% block content %}
 <div id="loading-message" style="display: none;">
     <p>Loading, please wait...</p>
+    <!-- A hidden loading message displayed during asynchronous actions. -->
 </div>
 
-<!--If the user is "Tenant"-->
+<!--If the user is "Tenant". -->
 {% if user_type == "Tenant" or user_type == "tenant" %}
 <div id="contract-viewer" class="py-10 bg-white min-h-screen flex items-center justify-center">
     <div class="bg-white w-full max-w-4xl py-0 px-8">
@@ -24,6 +25,7 @@
                 {% for property in properties %}
                 <option value="{{property.id}}">{{property.property_name}}</option>
                 {% endfor %}
+               <!-- Dynamically populates the property dropdown with properties liked by the tenant. -->
             </select>
         </div>
 
@@ -60,6 +62,7 @@
                         </td>
                     </tr>
                     {% endfor %}
+                    <!-- Renders a table of contracts, showing their status, upload date, and an option to view them. -->
                 </tbody>
             </table>
 
@@ -74,11 +77,13 @@
             <p class="text-lg text-gray-600"><strong>Upload Date:</strong> <span id="modal-upload-date"></span></p>
         </div>
         <embed id="modal-contract-viewer" class="rounded-md w-full" src="" height="350px"
+        <!-- Previewing the PDF contract. -->
             type="application/pdf"></embed>
         {% if user_type == "Tenant" or user_type == "tenant" %}
         <div class="mt-4">
             <button id="sign-contract-btn" class="px-6 py-3 text-white rounded-md bg-black hidden">Sign with Docusign</button>
         </div>
+        <!-- Button for tenants to sign contracts via Docusign. -->
         {% endif %}
 
         <button onclick="closeContractModal()"
@@ -86,7 +91,7 @@
     </div>
 </div>
 
-<!--If the user is "Landlord"-->
+<!--If the user is "Landlord". -->
 {% elif user_type == "Landlord" or user_type == "landlord" %}
 <div id="contract-viewer" class="py-10 bg-white min-h-screen flex items-center justify-center">
     <div class="bg-white w-full max-w-4xl py-0 px-8">
