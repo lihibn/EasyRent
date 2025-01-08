@@ -122,5 +122,6 @@ def add_cors_headers(response):
 with app.app_context():
     Base.metadata.create_all(bind=engine)
 
+# Runs the Flask application on all available network interfaces (0.0.0.0).
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
