@@ -102,32 +102,36 @@ def login():
     if not email or not password:
         return jsonify({"message": "Missing required fields"}), 400 # Return error if required fields are missing.
 
+    if not user:
+        return jsonify({"message": "User not found"}), 401
+    
     # Check if the user exists and verify the password.
-    if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
-        role = user.role_as_string if user.role else 'guest'
-        
-        # Update the last login timestamp.
-        user.last_login = datetime.datetime.utcnow()
-        session.add(user)  # Add the user back to the session.
-        session.commit()
+    
+      else:
+        if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):  
+            role = user.role
+            print(role)
+            user.last_login = datetime.datetime.utcnow()
+            session.add(user)  # Add the user back to the session
+            session.commit()  # Save
 
-        # Generate JWT token.
-        token = jwt.encode({
-            "user_id": user.id,
-            "email": email,
-            "role": role,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30)
-        }, os.getenv('SECRET_KEY'), algorithm="HS256")
-        print(token)
-        # Prepare the HTTP response with the JWT token.
-        resp = make_response(jsonify({"message": "Login successful", "token": token}))
-        # Set the token in an HTTP-only cookie.
-        resp.set_cookie('auth_token', token, httponly=True, secure=True, samesite='None')
+            # Generate JWT token
+            token = jwt.encode({
+                "user_id": user.id,
+                "email": email,
+                "role": role,
+                "exp":  datetime.datetime.utcnow() + datetime.timedelta(days=30) 
+            }, os.getenv('SECRET_KEY'), algorithm="HS256")
+            print(token)
+            # Prepare response with token
+            resp = make_response(jsonify({"message": "Login successful", "token": token}))
+            # Set the token as a cookie
+            resp.set_cookie('auth_token', token, httponly=True, secure=True, samesite='None')
+            
+            return resp, 200
 
-        return resp, 200
-
-    else:
-        return jsonify({"message": "Invalid credentials"}), 401
+         else:
+            return jsonify({"message": "Invalid credentials"}), 401
 
 
 @auth_routes.route('/logout', methods=['GET'])
