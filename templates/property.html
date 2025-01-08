@@ -13,6 +13,8 @@
       <h1 class="text-3xl font-bold text-center text-gray-800">
         Fault Reports
       </h1>
+      
+      <!-- Button to add a new report, triggers a JavaScript function. -->
       <button
         id="add-property-btn"
         class="bg-[#45a049] text-white px-6 py-2 rounded"
@@ -22,6 +24,7 @@
       </button>
     </div>
     <h2 class="text-xl font-bold mb-4"></h2>
+    <!-- Table displaying the fault reports. -->
     <table class="table-auto w-full border-collapse">
       <thead>
         <tr class="bg-gray-100 border">
@@ -33,10 +36,12 @@
           <th class="border px-4 py-2 text-start">Rating</th>
         </tr>
       </thead>
+      <!-- Table body, to be dynamically populated with JavaScript -->
       <tbody id="report-table-body"></tbody>
     </table>
   </div>
 
+  <!-- Button to navigate back to the fault reports table. -->
   <div id="report-form-container" style="display: none">
     <button
       id="back-to-reports-btn"
@@ -46,6 +51,7 @@
       Back to Reports
     </button>
     <h2 class="text-xl font-bold mb-4">Report a Fault in Your Property</h2>
+    <!-- Form for submitting a fault report. -->
     <form
       id="report-form"
       method="POST"
@@ -57,12 +63,14 @@
           <td class="border px-4 py-2 font-semibold">Select Property:</td>
           <td class="border px-4 py-2">
             <!-- <input type="text" id="property_name" name="property_name" class="w-full border p-2" required /> -->
+            <!-- Dropdown for property selection, populated dynamically with server-side data. -->
             <select
               id="property_name"
               class="w-full p-3 border border-gray-200 rounded-md shadow-sm"
               required
             >
               <option value="">Select Property</option>
+              <!-- Looping through properties to create options. -->
               {% for property in properties %}
               <option value="{{property.id}}">
                 {{property.property_name}}
@@ -71,6 +79,7 @@
             </select>
           </td>
         </tr>
+        <!-- Row for entering fault description. -->
         <tr>
           <td class="border px-4 py-2 font-semibold">Fault Description:</td>
           <td class="border px-4 py-2">
@@ -83,6 +92,7 @@
             />
           </td>
         </tr>
+        <!-- Row for entering detailed fault information. -->
         <tr>
           <td class="border px-4 py-2 font-semibold">Fault Details:</td>
           <td class="border px-4 py-2">
@@ -96,6 +106,7 @@
             ></textarea>
           </td>
         </tr>
+        <!-- Row for uploading an image of the fault. -->
         <tr>
           <td class="border px-4 py-2 font-semibold">Upload a Picture:</td>
           <td class="border px-4 py-2">
@@ -109,6 +120,7 @@
             />
           </td>
         </tr>
+        <!-- Row for entering the professional's name. -->
         <tr>
           <td class="border px-4 py-2 font-semibold">Professional Name:</td>
           <td class="border px-4 py-2">
@@ -121,9 +133,11 @@
             />
           </td>
         </tr>
+        <!-- Row for selecting a professional's rating. -->
         <tr>
           <td class="border px-4 py-2 font-semibold">Professional Rating:</td>
           <td class="border px-4 py-2">
+            <!-- Star rating system, updates a hidden input with the selected value. -->
             <div id="rating-stars" class="flex space-x-1 cursor-pointer">
               <span class="star cursor-pointer" data-value="1">☆</span>
               <span class="star cursor-pointer" data-value="2">☆</span>
@@ -155,6 +169,8 @@
     </form>
   </div>
 </div>
+
+<!-- Section for landlords to view and manage listed properties -->
 {% elif user_type == "Landlord" or user_type == "landlord" %}
 
 <div class="py-20 bg-gray-50" id="listing-page">
@@ -176,6 +192,7 @@
     <div
       class="properties-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
     >
+      <!-- Loop through the properties data. -->
       {% for property in properties %}
 
       <div class="bg-white border border-gray-200 rounded-sm overflow-hidden">
@@ -186,6 +203,7 @@
             class="w-full h-56 object-cover"
           />
         </div>
+        <!-- Property details. -->
         <div class="p-4">
           <h3 class="text-lg font-bold text-gray-800 mb-4">
             {{ property.property_name }}
@@ -274,6 +292,7 @@
                   stroke-linejoin="round"
                 ></g>
                 <g id="SVGRepo_iconCarrier">
+                  <!--This section defines multiple SVG <path> elements, which appear to create a complex graphical pattern or icon.-->
                   <path
                     fill-rule="evenodd"
                     clip-rule="evenodd"
@@ -399,7 +418,8 @@
               <p>{{ property.property_type }}</p>
             </div>
           </div>
-
+          
+          <!-- Monthly rent displayed. -->
           <div class="flex items-center justify-between">
             <p class="text-gray-700 text-2xl font-medium">
               ${{ property.monthly_rent }}
