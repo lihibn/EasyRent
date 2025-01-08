@@ -39,6 +39,7 @@ document
 
             const result = await response.json();
             if (response.status === 200) {
+                window.location.href = "/";
                 document.getElementById("signup-modal").classList.add("hidden");
                 showSuccessMessage(result.message);
                 resetForm();
