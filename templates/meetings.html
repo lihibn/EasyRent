@@ -4,12 +4,14 @@
   rel="stylesheet"
   href="{{ url_for('static', filename='css/meetings.css') }}"
 />
+<!-- Content visible only to tenant users. -->
 {% endblock %} {% block content %} {% if user_type == "Tenant" or user_type ==
 "tenant" %}
 <div
   id="meeting-scheduler"
   class="py-10 bg-white min-h-screen flex items-center justify-center"
 >
+  <!-- Schedule a Meeting. -->
   <div class="bg-white w-full max-w-3xl py-0 px-8">
     <div class="text-center mb-8">
       <h1 class="text-4xl font-extrabold text-gray-800 mb-2">
@@ -30,6 +32,7 @@
         id="liked-properties"
         class="w-full p-3 border border-gray-200 rounded-md shadow-sm"
       >
+        <!-- Dropdown to select a property from the tenant's properties. -->
         <option value="">Select Property</option>
         {% for property in properties %}
         <option value="{{property.id}}">{{property.property_name}}</option>
@@ -53,6 +56,7 @@
 <div
   class="text-center max-w-screen-lg mx-auto my-6 p-6 bg-white fade-in px-4 md:px-12 lg:px-20 h-[80vh]	flex justify-center items-center"
 >
+  <!-- Content for non-tenants or unauthenticated users. -->
   <p>Welcome, guest! Please log in to access your dashboard.</p>
 </div>
 {% endif %} {% block js %}
