@@ -10,8 +10,11 @@
         <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-800 mb-2 text-start">
           Payment History
         </h1>
+        <!--Displays the tenant's payment history. -->
         <p class="text-gray-600 text-start">Manage your properties payments:</p>
       </div>
+      
+      <!--Alerts tenants of upcoming payments. -->
       <div id="reminders-section" class="mb-8 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded">
         <h3 class="text-lg font-semibold">Reminders</h3>
         <p>
@@ -19,6 +22,7 @@
           penalties.
         </p>
       </div>
+      <!--Renders a list of payment transactions or shows a message if there are none. -->
       {% if payments %}
       <div class="overflow-hidden">
         <table class="w-full border-collapse border border-gray-200">
@@ -62,6 +66,7 @@
       {% endif %}
     </div>
 
+    <!--Allows tenants to pay custom amounts using PayPal. -->
     <div id="make-pay-now" class="text-center mb-4">
       <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-start">
         Make Payment
@@ -95,6 +100,7 @@
           <input type="number" style="color: black" id="payment-amount"
             class="w-full p-3 text-center text-black border border-gray-200 rounded-md shadow-sm" readonly
             value="{{expected_rental_ammount}}" />
+          <!-- Displays the predefined payment amount (expected_rental_ammount). -->
         </div>
 
         <div>
@@ -134,6 +140,7 @@
       </button>
     </div>
 
+    <!--View Payments-->
     <div id="payments-tracking" class="hidden">
       <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-start mt-2">
         Payments Tracking
