@@ -1,3 +1,4 @@
+# Imports.
 from flask import Flask, render_template, request, jsonify, send_file, session, make_response, abort, redirect, current_app, url_for
 from flask_oauthlib.client import OAuth
 from urllib.parse import quote, unquote, urlencode
@@ -15,15 +16,18 @@ from auth.auth_utils import get_user_from_token
 import jwt
 import os
 from flask_cors import CORS
-import shutil  # For backup - Lihi
+import shutil  # Provides functions for file and directory management.
 
+# Initialize a Flask application.
 app = Flask(__name__)
-CORS(app)  # This will allow all origins by default
+CORS(app)  # Allowing application to accept requests from any origin.
 app.secret_key = os.urandom(24)
 
-CORS(app, resources={r"/*": {"origins": "*"}})
-CORS(app, resources={r"/api/*": {"origins": "*"}})  # Adjust for your needs
-# Register Bluerints
+
+CORS(app, resources={r"/*": {"origins": "*"}}) # Enables CORS for all routes.
+CORS(app, resources={r"/api/*": {"origins": "*"}})  # Enables CORS specifically for api's.
+
+# Register blueprints for different routes of the application.
 app.register_blueprint(auth_routes, url_prefix='/auth')
 app.register_blueprint(property_routes)
 app.register_blueprint(fault_routes)
@@ -32,13 +36,14 @@ app.register_blueprint(meeting_routes)
 app.register_blueprint(contract_routes)
 app.register_blueprint(payment_routes)
 
+# Load SECRET_KEY and DB_PATH from env file.
 SECRET_KEY = os.getenv('SECRET_KEY')
-
-# Lihi add it
 DB_PATH = os.getenv('DB_PATH')
 
+# Define a route for the root URL of the application
 @app.route("/")
 
+# Function that checks user authentication and fetch user data based on a token.
 def index():
     auth_token = request.cookies.get('auth_token')
     print(auth_token)
@@ -48,9 +53,8 @@ def index():
     if auth_token:
         try:
             decoded_token = jwt.decode(auth_token, SECRET_KEY, algorithms=["HS256"])
-            user_email = decoded_token.get('email')  # Extract user email
-            user_role = decoded_token.get('role')  # Extract user email
-            print(user_role)
+            user_email = decoded_token.get('email')  # Extract user email.
+            user_role = decoded_token.get('role')  # Extract user email.
             is_logged_in = True
             session = SessionLocal()
             user = session.query(User).filter(User.email == user_email).first()
@@ -59,25 +63,26 @@ def index():
         except jwt.InvalidTokenError:
             pass
 
-    # Extract unique cities as plain strings
+    # Query to get a list of distinct cities and all properties from 'Property' table.
     unique_cities = [city[0].title() for city in session.query(Property.city).distinct().all()]
     properties = session.query(Property).all()
 
-    print(unique_cities)
+    # Return the 'index.html' template with the details below.
     return render_template(
         'index.html',
         user=user,
         user_type=user_role,
         cities=unique_cities if unique_cities else None, properties=properties)
 
-# Lihi change from here
+# Route to download the database file as an attachment.
 @app.route("/download-db", methods=["GET"])
 def download_db():
     try:
         return send_file(DB_PATH, as_attachment=True)
     except Exception as e:
         return {"error": str(e)}, 500
-
+        
+# Route to create a backup file of the database.
 @app.route("/backup-db", methods=["GET"])
 def backup_db():
     backup_path = f"{DB_PATH}.backup"
@@ -87,6 +92,7 @@ def backup_db():
     except Exception as e:
         return {"error": str(e)}, 500
 
+# Route to update a user's information based on the user ID.
 @app.route("/update-user/<int:user_id>", methods=["POST"])
 def update_user(user_id):
     session = SessionLocal()
@@ -97,15 +103,14 @@ def update_user(user_id):
 
         user.name = request.json.get("name", user.name)
         user.email = request.json.get("email", user.email)
-        session.commit()
+        session.commit() # Commit the changes to the database.
         return {"message": "User updated successfully"}
     except Exception as e:
         return {"error": str(e)}, 500
     finally:
-        session.close()
+        session.close() # Close the database session.
 
-# To here
-
+# The function adds CORS headers to the response for every request after it has been processed.
 @app.after_request
 def add_cors_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -113,9 +118,9 @@ def add_cors_headers(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     return response
 
-
+# Creates all database tables defined in the SQLAlchemy models within the application context.
 with app.app_context():
     Base.metadata.create_all(bind=engine)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0")
