@@ -18,10 +18,10 @@
 <body>
   <nav class="bg-white dark:bg-gray-900 sticky w-full z-20 top-0 border-b border-gray-200 dark:border-gray-600">
     <div class="flex flex-wrap items-center justify-between mx-auto px-4 py-2">
+      <!-- Logo linking to the home page. -->
       <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="{{url_for('static',filename='assets/logo/easyrent-logo.jpeg')}}" alt="easyrent-Logo"
           class="w-46 h-12 rounded-full p-1" />
-      <!-- Logo linking to the home page. -->
       </a>
       <div class="flex md:order-2 space-x-4 md:space-x-0 rtl:space-x-reverse mr-2">
         {% if not user %}
