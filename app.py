@@ -37,7 +37,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 @app.route("/")
 
 # Lihi add it
-DB_PATH = '/opt/render/project/src/easyrent.db'
+DB_PATH = os.getenv('DB_PATH', '/opt/render/project/src/easyrent.db')
 
 def index():
     auth_token = request.cookies.get('auth_token')
