@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify, session, make_response, abort, redirect, current_app, url_for
-from flask import send_file #Lihi added
 from flask_oauthlib.client import OAuth
 from urllib.parse import quote, unquote, urlencode
 from database.db import engine, SessionLocal, Base
@@ -36,8 +35,9 @@ app.register_blueprint(payment_routes)
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 #Lihi change it
-#@app.route("/")
+@app.route("/")
 
+"""
 #Lihi added it
 #@app.route('/download-db', methods=['GET'])
 @app.route('/list-files', methods=['GET'])
@@ -50,7 +50,7 @@ def list_files():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
         
-"""def download_db():
+def download_db():
     db_path = '/opt/render/project/src/easyrent.db'
     try:
         return send_file(db_path, as_attachment=True)
