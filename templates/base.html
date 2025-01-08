@@ -31,14 +31,11 @@
           Sign Up
         </button>
         {% elif user %}
+        <!-- Displays the first letter of the user's name for authenticated users. -->
         <p class="hidden md:block text-md font-bold rounded-full px-4 py-2 cursor-pointer text-white border border-white bg-black"
           onclick="toggleMenu()" aria-label="Toggle menu">
           {{ user.full_name[0].capitalize() }}
         </p>
-        <!-- Displays the first letter of the user's name for authenticated users. -->
-
-
-
 
         <div id="user-dropdown"
           class="hidden z-[1000] absolute top-20 right-5 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow dark:bg-gray-700 dark:divide-gray-600">
@@ -61,11 +58,11 @@
           class="inline-flex items-center mr-4 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
           aria-expanded="false">
           <span class="sr-only">Open main menu</span>
+          <!-- Hamburger icon for the mobile menu. -->
           <svg class="w-8 h-8" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M1 1h15M1 7h15M1 13h15" />
           </svg>
-          <!-- Hamburger icon for the mobile menu. -->
         </button>
       </div>
       <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
@@ -113,10 +110,13 @@
 
             <!-- User Info Section. -->
             <div class="px-4 py-2 text-start">
+              <!-- Display the full name of the user. -->
               <span class="block text-lg font-semibold text-gray-900">{{ user.full_name }}</span>
+              <!-- Display the user's email. -->
               <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ user.email }}</span>
             </div>
             {% else %}
+            <!-- message if the user is not logged in -->
             <p class="text-md text-gray-500">User not logged in</p>
             {% endif %}
           </div>
