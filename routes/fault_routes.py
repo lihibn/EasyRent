@@ -1,3 +1,4 @@
+# Import necessary modules and libraries.
 from flask import Blueprint, request, jsonify, session, make_response, redirect, url_for
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.models import User, Property, FaultReport
@@ -9,27 +10,33 @@ import jwt
 from dotenv import load_dotenv
 import os
 
+# Load environment variables from the .env file.
 load_dotenv()
 
+# Retrieve the secret key for JWT decoding.
 SECRET_KEY = os.getenv('SECRET_KEY')
+
+# Configure the upload folder and allowed file extensions.
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
+# Define a Flask blueprint for fault reporting routes.
 fault_routes = Blueprint('fault_routes', __name__)
+# Re-define allowed extensions and the folder for fault images.
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 UPLOAD_FOLDER = 'static/property/faults'
 
-
+# Utility function to check if a file has an allowed extension.
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+# Route to report a fault for a property.
 @fault_routes.route('/property-add-fault', methods=['POST'])
 def report_fault():
     auth_token = request.cookies.get('auth_token')
     user = None
     user_role = None
-
+# Decode the JWT token to identify the user.
     if auth_token:
         try:
             decoded_token = jwt.decode(auth_token, SECRET_KEY, algorithms=["HS256"])
@@ -41,9 +48,10 @@ def report_fault():
             return jsonify({"message": "Token has expired. Please sign in again."}), 401
         except jwt.InvalidTokenError:
             return jsonify({"message": "Please sign in again."}), 401
-
+# Ensure the user is authorized and has the "tenant" role.
     session = SessionLocal()
     if user_role and user_role.lower() == "tenant":
+# Retrieve form data.
         property_id = request.form.get('property_id')
         print(property_id)
         professional_name = request.form.get('professional_name')
@@ -51,17 +59,19 @@ def report_fault():
         fault_details = request.form.get('fault_details')
         professional_rating = request.form.get('professional_rating')
         fault_image = request.files.get('fault_image')
-
+        
+# Create directories for storing fault images.
         base_path = os.path.join(UPLOAD_FOLDER, f'user-{user.id}', f'property-{property_id}', 'fault-images')
         os.makedirs(base_path, exist_ok=True)
 
+# Save the fault image if it's allowed.
         file_url = None
         if fault_image and allowed_file(fault_image.filename):
             filename = secure_filename(fault_image.filename)
             file_path = os.path.join(base_path, filename)
             fault_image.save(file_path)
             file_url = url_for('static', filename=os.path.relpath(file_path, 'static'), _external=True)
-
+# Create and save a fault report in the database.
         try:
             fault_report = FaultReport(
                 property_id=property_id,
@@ -84,13 +94,14 @@ def report_fault():
     else:
         return jsonify({"error": "Unauthorized access"}), 403
 
-
+# Route to fetch fault reports for the logged-in user.
 @fault_routes.route('/fetch-reports', methods=['GET'])
 def fetch_reports():
     auth_token = request.cookies.get('auth_token')
     user = None
     user_role = None
 
+# Decode the JWT token to identify the user.
     if auth_token:
         try:
             decoded_token = jwt.decode(auth_token, SECRET_KEY, algorithms=["HS256"])
@@ -102,11 +113,11 @@ def fetch_reports():
             return jsonify({"message": "Token has expired. Please sign in again."}), 401
         except jwt.InvalidTokenError:
             return jsonify({"message": "Please sign in again."}), 401
-
+# Redirect to login if no valid user is found.
     if not user:
         return redirect('/login')
-
     session = SessionLocal()
+# Fetch fault reports and their related property details.
     try:
         fault_reports = session.query(FaultReport).filter(FaultReport.user_id == user.id).all()
 
