@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, session, make_response, abort, redirect, current_app, url_for
+from flask import send_file #Lihi added
 from flask_oauthlib.client import OAuth
 from urllib.parse import quote, unquote, urlencode
 from database.db import engine, SessionLocal, Base
@@ -38,7 +39,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 #@app.route("/")
 
 #Lihi added it
-@app.route('/list-files', methods=['GET'])
+@app.route('/download-db', methods=['GET'])
 def list_files():
     # Change the directory path to where your SQLite DB is stored
     directory = '/opt/render/project/src'  # Update to the actual path
@@ -47,6 +48,13 @@ def list_files():
         return jsonify({"files": files})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+        
+def download_db():
+    db_path = '/opt/render/project/src/easyrent.db'
+    try:
+        return send_file(db_path, as_attachment=True)
+    except Exception as e:
+        return {"error": str(e)}, 500
 #until here
 
 def index():
