@@ -2,11 +2,9 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
 {% endblock %} {% block content %}
 
-<!-- hero section -->
 <div class="hero-section relative h-screen bg-black bg-opacity-50">
   <div class="absolute inset-0 bg-black bg-opacity-50"></div>
 
-  <!-- Hero Content -->
   <div class="relative z-10 flex flex-col justify-center items-center h-full text-white">
     <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-center text-white">
       Find Your Dream Property
@@ -14,12 +12,14 @@
     <p class="text-lg mb-8 text-center text-stone-200 max-w-xl mx-auto">
       Search by city, price range, property type and number of rooms.
     </p>
-
-    <!-- Search Form -->
+    
+    <!-- Filter form for property search. -->
     <form id="filter-form" class="w-full px-4 sm:px-6 md:px-8 lg:px-12 space-y-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <!-- City Selection Dropdown. -->
         <div>
           <select id="city" class="w-full p-3 border border-gray-300 rounded-sm text-gray-800" required>
+            <!-- City options. -->
             <option value="" disabled selected hidden>Select a City</option>
             <option value="ramat-hasharon">Ramat Hasharon</option>
             <option value="holon">Holon</option>
@@ -29,20 +29,23 @@
           </select>
         </div>
 
-        <!-- Price Range -->
+        <!-- Price Range input. -->
         <div class="flex flex-col sm:flex-row gap-4 sm:space-x-4">
+          <!-- Minimum Price Input. -->
           <input type="number" id="price-min" placeholder="Min $"
             class="w-full p-3 border border-gray-300 rounded-sm text-gray-800" min="1" oninput="validatePositiveNumber(this)" required/>
+          <!-- Maximum Price Input -->
           <input type="number" id="price-max" placeholder="Max $"
             class="w-full p-3 border border-gray-300 rounded-sm text-gray-800" min="1" oninput="validatePositiveNumber(this)" required/>
         </div>
 
-        <!-- Property Type Dropdown -->
+        <!-- Property Type Dropdown. -->
         <div>
           <select id="property-type" class="w-full p-3 border border-gray-300 rounded-sm text-gray-800" >
             <option value="" disabled selected hidden>
               Select Property Type
             </option>
+            <!-- Property type options. -->
             <option value="Apartment">Apartment</option>
             <option value="House">House</option>
             <option value="Villa">Villa</option>
@@ -50,13 +53,13 @@
           </select>
         </div>
 
-        <!-- Number of Rooms -->
+        <!-- Number of Rooms input. -->
         <div>
           <input type="number" id="rooms" placeholder="Number of Rooms"
             class="w-full p-3 border border-gray-300 rounded-sm text-gray-800"  min="1" oninput="validatePositiveNumber(this)" required/>
         </div>
 
-        <!-- Submit Button -->
+        <!-- Submit Button. -->
         <div class="flex justify-center items-center">
           <button id="search-btn" type="submit"
             class="px-6 py-3 w-full bg-black font-semibold rounded-sm shadow transition text-white hover:bg-gray-800" min="1" oninput="validatePositiveNumber(this)" required>
@@ -68,7 +71,7 @@
   </div>
 </div>
 
-<!-- search property -->
+<!-- search property. -->
 <section id="filteredProperties" class="py-20 bg-gray-50 hidden">
   <div class="mx-auto px-4 sm:px-6 lg:px-16">
     <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">
@@ -207,10 +210,12 @@
             </div>
           </div>
 
+          <!--information about a property's monthly rent. -->
           <div class="flex items-center justify-between">
             <p class="text-gray-700 text-2xl font-medium">
               ${{ property.monthly_rent }}
             </p>
+            <!--Button to view more details. -->
             <button onclick="viewMoreInfo(
                           '{{ property.property_name }}',
                           '{{ property.city }}',
