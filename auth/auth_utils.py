@@ -12,7 +12,7 @@ load_dotenv()
 
 # Verify JWT token sent in cookies.
 def verify_token():
-    current_user = get_jwt_identity()  # Get the current user from the token
+    current_user = get_jwt_identity()  
     return jsonify({"status": "success", "user_id": current_user['user_id'], "role": current_user['role']}), 200
 
 # Utility function to decode JWT and fetch user details.
@@ -22,7 +22,7 @@ def get_user_from_token(auth_token):
         decoded_token = jwt.decode(auth_token, os.getenv('SECRET_KEY'), algorithms=["HS256"])
         user_email = decoded_token.get('email') # Extract the email.
         user_role = decoded_token.get('role') # Extract the role.
-        user = session.query(User).filter(User.email == user_email).first() # Query the database to find the user by email.
+        user = session.query(User).filter(User.email == user_email).first() 
         return user, user_role
     except jwt.ExpiredSignatureError:
         return jsonify({"message": "Token has expired. Please sign in again."}), 401
