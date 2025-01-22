@@ -1,1 +1,1 @@
-# EasyRent
+# EasyRent - Sadna
