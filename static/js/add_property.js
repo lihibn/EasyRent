@@ -1,3 +1,6 @@
+// EasyRent - 20251W87
+
+
 // Sets the minimum date for date inputs to today to prevent selecting past dates.
 const today = new Date().toISOString().split("T")[0];
 document.getElementById("entry-date").setAttribute("min", today);
