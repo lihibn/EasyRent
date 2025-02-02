@@ -1,3 +1,6 @@
+// EasyRent - 20251W87
+
+
 // Toggles the visibility of the navigation bar when the menu icon is clicked.
 const navBar = document.querySelector("nav");
 const menuBtns = document.querySelectorAll(".menu-icon");
