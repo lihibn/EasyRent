@@ -1,3 +1,6 @@
+// EasyRent - 20251W87
+
+
 // Selects the navbar, menu buttons, and overlay elements from the DOM.
 const navBar = document.querySelector("nav");
 const menuBtns = document.querySelectorAll(".menu-icon");
