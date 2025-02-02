@@ -1,3 +1,6 @@
+// EasyRent - 20251W87
+
+
 // Selects navigation bar and menu button elements.
 const navBar = document.querySelector("nav");
 const menuBtns = document.querySelectorAll(".menu-icon");
