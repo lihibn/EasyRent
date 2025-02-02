@@ -1,3 +1,6 @@
+# EasyRent - 20251W87
+ 
+
 # Import necessary modules and libraries.
 from flask import Flask, render_template, request, jsonify, send_file, session, make_response, abort, redirect, current_app, url_for
 from flask_oauthlib.client import OAuth
