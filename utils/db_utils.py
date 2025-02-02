@@ -1,3 +1,6 @@
+# EasyRent - 20251W87
+ 
+
 # Import necessary modules and libraries.
 import sqlite3
 from flask import g, current_app
