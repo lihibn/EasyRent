@@ -1,3 +1,6 @@
+# EasyRent - 20251W87
+
+
 # Import necessary modules and libraries.
 from flask import Blueprint, request, render_template, jsonify, session, make_response, redirect, url_for
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
