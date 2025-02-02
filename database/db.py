@@ -1,3 +1,6 @@
+<!--EasyRent - 20251W87 -->
+
+
 # Import necessary modules and libraries.
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
