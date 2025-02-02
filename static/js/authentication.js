@@ -1,3 +1,6 @@
+// EasyRent - 20251W87
+
+
 // Authentication - Sign Up.
 document
     .querySelector(".submit-btn")
