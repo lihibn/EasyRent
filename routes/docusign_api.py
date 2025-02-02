@@ -61,7 +61,6 @@ def send_signature_request(file_path, signer_email, signer_name, document_id):
 # Send a POST request to the DocuSign API to create an envelope.
         response = session.post(
             F"https://demo.docusign.net/restapi/v2.1/accounts/{os.getenv('DOCUSIGN_ACCOUNT_ID')}/envelopes",
-            # Replace with your account ID
             json=payload,
             headers=headers,
             timeout=120
