@@ -1,3 +1,6 @@
+<!--EasyRent - 20251W87 -->
+
+
 # Import necessary modules and libraries for database table definitions and relationships.
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey, Enum, DateTime, Text, Date, Time, Boolean
 from sqlalchemy.sql import func
